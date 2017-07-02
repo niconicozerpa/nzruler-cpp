@@ -8,6 +8,7 @@
 #include <QCursor>
 #include <QFont>
 #include <QFrame>
+#include <QKeyEvent>
 #include <QMouseEvent>
 #include <QSettings>
 
@@ -51,6 +52,7 @@ protected:
     void closeEvent(QCloseEvent *);
     void mousePressEvent(QMouseEvent *);
     void mouseReleaseEvent(QMouseEvent *);
+    void keyPressEvent(QKeyEvent *);
 
 public:
     NZRuler(QWidget *, Qt::WindowFlags);

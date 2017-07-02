@@ -87,3 +87,95 @@ void NZRuler::mouseReleaseEvent(QMouseEvent * event) {
         this->mouseIsPressed = false;
     }
 }
+
+void NZRuler::keyPressEvent(QKeyEvent * evt) {
+    auto key = evt->key();
+    
+    if(key == Qt::Key_Escape) {
+        this->close();
+    } else {
+        unsigned short int increment;
+        auto modifiers = evt->modifiers();
+
+        if (modifiers & Qt::ShiftModifier) {
+            increment = 3;
+        } else {
+            increment = 1;
+        }
+
+        if(modifiers & Qt::AltModifier) {
+            QSize size = this->size();
+
+            int new_width = 0;
+            int new_height = 0;
+
+            bool resize = true;
+
+            switch (key) {
+                case Qt::Key_Left:
+                    new_width = size.width() - increment;
+                    new_height = size.height();
+                    break;
+
+                case Qt::Key_Up:
+                    new_width = size.width();
+                    new_height = size.height() - increment;
+                    break;
+
+                case Qt::Key_Right:
+                    new_width = size.width() + increment;
+                    new_height = size.height();
+                    break;
+
+                case Qt::Key_Down:
+                    new_width = size.width();
+                    new_height = size.height() + increment;
+                    break;
+
+                default:
+                    resize = false;
+            }
+
+            if (resize) {
+                this->resize(new_width, new_height);
+            }
+
+        } else {
+            
+            QPoint pos = this->pos();
+            int new_x = 0;
+            int new_y = 0;
+
+            bool move = true;
+
+            switch (key) {
+                case Qt::Key_Left:
+                    new_x = pos.x() - increment;
+                    new_y = pos.y();
+                    break;
+
+                case Qt::Key_Up:
+                    new_x = pos.x();
+                    new_y = pos.y() - increment;
+                    break;
+
+                case Qt::Key_Right:
+                    new_x = pos.x() + increment;
+                    new_y = pos.y();
+                    break;
+
+                case Qt::Key_Down:
+                    new_x = pos.x();
+                    new_y = pos.y() + increment;
+                    break;
+
+                default:
+                    move = false;
+            }
+            
+            if (move) {
+                this->move(new_x, new_y);
+            }
+        }
+    }
+}
