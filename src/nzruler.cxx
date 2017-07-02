@@ -63,3 +63,11 @@ NZRuler::NZRuler(QWidget * parent, Qt::WindowFlags f):
 }
 
 
+
+void NZRuler::closeEvent(QCloseEvent * evt) {
+    this->settings->setValue("position", QVariant(this->pos()));
+    this->settings->setValue("size", QVariant(this->size()));
+    this->settings->setValue("vertical", QVariant(this->vertical));
+
+    evt->accept();
+}

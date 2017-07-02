@@ -8,6 +8,7 @@
 #include <QFont>
 #include <QFrame>
 #include <QSettings>
+#include <QCloseEvent>
 
 using namespace std;
 
@@ -47,6 +48,7 @@ protected:
 
 public:
     NZRuler(QWidget *parent = Q_NULLPTR, Qt::WindowFlags f = Qt::WindowFlags());
+    void closeEvent(QCloseEvent * evt);
 };
 
 #endif // __NZULER_H__
