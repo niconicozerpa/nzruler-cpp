@@ -45,6 +45,7 @@ protected:
 
     void initValues();
 
+public:
     NZRuler(QWidget *parent = Q_NULLPTR, Qt::WindowFlags f = Qt::WindowFlags());
 };
 

@@ -1,9 +1,16 @@
 #include "nzruler.h"
 
 #include <iostream>
+#include <QApplication>
+
 using namespace std;
 
 int main(int argc, char ** argv) {
-    cout << "Hola mundo" << endl;
-    return 0;
+    
+    QApplication app(argc, argv);
+    
+    NZRuler mainWindow(Q_NULLPTR, Qt::FramelessWindowHint);
+
+    mainWindow.show();
+    return app.exec();
 }
