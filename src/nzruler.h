@@ -10,8 +10,8 @@
 #include <QFrame>
 #include <QKeyEvent>
 #include <QMouseEvent>
+#include <QPaintEvent>
 #include <QSettings>
-
 
 using namespace std;
 
@@ -54,6 +54,7 @@ protected:
     void mouseReleaseEvent(QMouseEvent *);
     void keyPressEvent(QKeyEvent *);
     void mouseMoveEvent(QMouseEvent *);
+    void paintEvent(QPaintEvent *);
 
     void resize(int, int);
 

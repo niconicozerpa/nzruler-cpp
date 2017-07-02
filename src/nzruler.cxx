@@ -1,7 +1,10 @@
 #include "nzruler.h"
 
+#include <QPainter>
 #include <QPoint>
 #include <QSize>
+#include <QStaticText>
+#include <QString>
 
 void NZRuler::initValues() {
     this->yellow = QColor(255, 255, 128, 255);
@@ -252,4 +255,120 @@ void NZRuler::resize(int width, int height) {
     }
     
     this->QWidget::resize(width, height);
+}
+
+void NZRuler::paintEvent(QPaintEvent * evt) {
+    QPainter pnt;
+
+    pnt.begin(this);
+    pnt.setFont(this->font);
+
+    int width = this->width();
+    int height = this->height();
+    
+    pnt.drawRect(0, 0, width - 1, height - 1);
+    pnt.fillRect(1, 1, width - 2, height - 2, this->yellow);
+    
+    this->safePos = this->vertical ? 0 : 33;
+        
+    int size = this->vertical ? height : width;
+    
+    pnt.setPen(this->red);
+    int limit;
+    
+    if (this->vertical) {
+        QString str = QString("%1").arg(height);
+        QStaticText labelLength(str);
+        limit = (height - 3 - labelLength.size().height());
+
+        pnt.drawStaticText(17.5, limit, labelLength);
+    } else {
+        QString str = QString("%1").arg(width);
+        QStaticText labelLength(str);
+        limit = (width - 3 - labelLength.size().width());
+
+        pnt.drawStaticText(limit, 17.5, labelLength);
+    }
+    
+    pnt.setPen(this->black);
+    
+    for (int i = 0; i < size; i += 2) {
+        int length;
+
+        if (i % 50 == 0) {
+            length = 15;
+
+        } else if (i % 10 == 0) {
+            length = 10;
+        } else {
+            length = 5;
+        }
+        
+        if (this->vertical) {
+            pnt.drawLine(0, i, length, i);
+        } else {
+            pnt.drawLine(i, 0, i, length);
+        }
+        
+        if (length == 15) {
+            QStaticText label = QStaticText(QString("%1").arg(i));
+
+            float labelX;
+            float labelY;
+
+            bool drawLabel;
+            
+            if (this->vertical) {
+                labelX = 17.5;
+                labelY = i - (label.size().height() / 2);
+                
+                if (this->safePos < (labelX + label.size().width())) {
+                    this->safePos = labelX + label.size().width() + 5;
+                }
+                    
+                drawLabel = (labelY + label.size().height()) < limit;
+            } else {
+                labelX = i - (label.size().width() / 2);
+                labelY = 17.5;
+                
+                drawLabel = (labelX + label.size().width()) < limit;
+            }
+
+            if(drawLabel) {
+                pnt.drawStaticText(labelX, labelY, label);
+            }
+        }
+    }
+
+    if (!this->mouseIsPressed) {
+        pnt.setPen(this->blue);
+        
+        if (this->vertical) {
+            pnt.drawLine(0, this->mouse.y, width, this->mouse.y);
+        } else {
+            pnt.drawLine(this->mouse.x, 0, this->mouse.x, height);
+        }
+
+        QStaticText label(QString("%1").arg(this->vertical ? this->mouse.y : this->mouse.x));
+        
+        int posX, posY;
+        bool drawLabel;
+
+        if (this->vertical) {
+            posX = this->safePos;
+            posY = this->mouse.y + 5;
+            
+            drawLabel = (posY + label.size().height()) > limit;
+        } else {
+            posX = this->mouse.x + 5;
+            posY = this->safePos;
+        
+            if (posX + label.size().width() > (width - 5)) {
+                posX = this->mouse.x - 5 - label.size().width();
+            }
+        }
+        
+        pnt.drawStaticText(posX, posY, label);
+    }
+    pnt.end();
 }
