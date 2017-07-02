@@ -179,3 +179,59 @@ void NZRuler::keyPressEvent(QKeyEvent * evt) {
         }
     }
 }
+
+
+void NZRuler::mouseMoveEvent(QMouseEvent * evt) {
+    int x = evt->globalX();
+    int y = evt->globalY();
+    int lx = evt->x();
+    int ly = evt->y();
+    int w = this->width();
+    int h = this->height();
+    
+    this->mouse.x = lx;
+    this->mouse.y = ly;
+    
+    if (this->mouseIsPressed) {
+        if (this->oldCursor == Qt::SizeHorCursor) {
+            this->resize(lx + this->mouseOffset.dx, h);
+        }
+
+        else if (this->oldCursor == Qt::SizeVerCursor) {
+            this->resize(w, ly + this->mouseOffset.dy);
+        }
+
+        else if (this->oldCursor == Qt::SizeFDiagCursor) {
+            this->resize(lx + this->mouseOffset.dx, ly + this->mouseOffset.dy);
+        }
+        
+        else {
+            this->move(x - this->mouseOffset.x, y - this->mouseOffset.y);
+        }
+
+    } else {
+        Qt::CursorShape newCursor;
+
+        if (lx > (w - this->resizeArea) && ly > (h - this->resizeArea)) {
+            newCursor = Qt::SizeFDiagCursor;
+
+        } else if (lx > (w - this->resizeArea)) {
+            newCursor = Qt::SizeHorCursor;
+        }
+
+        else if (ly > (h - this->resizeArea)) {
+            newCursor = Qt::SizeVerCursor;
+        }
+
+        else {
+            newCursor = Qt::ArrowCursor;
+        }
+        
+        if (newCursor != this->oldCursor) {
+            this->setCursor(newCursor);
+            this->oldCursor = newCursor;
+        }
+        
+        this->update();
+    }
+}

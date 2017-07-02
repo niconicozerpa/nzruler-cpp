@@ -53,6 +53,7 @@ protected:
     void mousePressEvent(QMouseEvent *);
     void mouseReleaseEvent(QMouseEvent *);
     void keyPressEvent(QKeyEvent *);
+    void mouseMoveEvent(QMouseEvent *);
 
 public:
     NZRuler(QWidget *, Qt::WindowFlags);
