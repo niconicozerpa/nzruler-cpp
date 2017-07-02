@@ -25,10 +25,10 @@ typedef struct Mouse {
 
 class NZRuler: public QFrame {
 protected:
-    shared_ptr<QColor> yellow;
-    shared_ptr<QColor> black;
-    shared_ptr<QColor> blue;
-    shared_ptr<QColor> red;
+    QColor yellow;
+    QColor black;
+    QColor blue;
+    QColor red;
 
     MouseOffset mouseOffset;
 
@@ -37,7 +37,7 @@ protected:
     Qt::CursorShape oldCursor;
     Mouse mouse;
 
-    shared_ptr<QFont> font;
+    QFont font;
     int safePos;
     int vertical;
 
