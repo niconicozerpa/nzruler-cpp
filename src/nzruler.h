@@ -6,6 +6,7 @@
 #include <QColor>
 #include <QCursor>
 #include <QFont>
+#include <QFrame>
 #include <QSettings>
 
 using namespace std;
@@ -22,7 +23,7 @@ typedef struct Mouse {
     int y;
 } Mouse;
 
-class NZRuler {
+class NZRuler: public QFrame {
 protected:
     shared_ptr<QColor> yellow;
     shared_ptr<QColor> black;
@@ -41,6 +42,10 @@ protected:
     int vertical;
 
     shared_ptr<QSettings> settings;
+
+    void initValues();
+
+    NZRuler(QWidget *parent = Q_NULLPTR, Qt::WindowFlags f = Qt::WindowFlags());
 };
 
 #endif // __NZULER_H__
