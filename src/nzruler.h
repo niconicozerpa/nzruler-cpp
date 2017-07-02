@@ -7,8 +7,8 @@
 #include <QColor>
 #include <QCursor>
 #include <QFont>
-#include <QFrame>
 #include <QKeyEvent>
+#include <QMainWindow>
 #include <QMouseEvent>
 #include <QPaintEvent>
 #include <QSettings>
@@ -27,7 +27,7 @@ typedef struct Mouse {
     int y;
 } Mouse;
 
-class NZRuler: public QFrame {
+class NZRuler: public QMainWindow {
 protected:
     QColor yellow;
     QColor black;

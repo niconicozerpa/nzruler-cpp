@@ -31,7 +31,7 @@ void NZRuler::initValues() {
 }
 
 NZRuler::NZRuler(QWidget * parent, Qt::WindowFlags f):
-    QFrame(parent, f) {
+    QMainWindow(parent, f) {
     this->initValues();
 
     QPoint firstPos;
