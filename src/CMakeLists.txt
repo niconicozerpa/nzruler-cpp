@@ -11,8 +11,6 @@ set(CMAKE_AUTOMOC ON)
 
 find_package(Qt5Widgets REQUIRED)
 
-add_library(rulerclass nzruler.cxx)
-add_executable(nzruler main.cxx)
+add_executable(nzruler main.cxx nzruler.cxx)
 
-target_link_libraries(rulerclass Qt5::Widgets)
-target_link_libraries(nzruler rulerclass Qt5::Widgets)
+target_link_libraries(nzruler Qt5::Widgets)
