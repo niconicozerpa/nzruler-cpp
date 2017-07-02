@@ -1,5 +1,8 @@
 #include "nzruler.h"
 
+#include <QPoint>
+#include <QSize>
+
 void NZRuler::initValues() {
     this->yellow = make_shared<QColor>(255, 255, 128, 255);
     this->black = make_shared<QColor>(0, 0, 0, 255);
@@ -27,4 +30,34 @@ void NZRuler::initValues() {
 NZRuler::NZRuler(QWidget * parent, Qt::WindowFlags f):
     QFrame(parent, f) {
     this->initValues();
+
+    QPoint firstPos;
+    QSize firstSize;
+    bool firstVertical;
+
+
+    if(this->settings->contains("position")) {
+        firstPos = this->settings->value("position").toPoint();
+    } else {
+        firstPos = QPoint(100, 100);
+    }
+        
+    if(this->settings->contains("size")) {
+        firstSize = this->settings->value("size").toSize();
+    } else {
+        firstSize = QSize(200, 60);
+    }
+    
+    if(this->settings->contains("vertical")) {
+        firstVertical = this->settings->value("vertical").toBool();
+    } else {
+        firstVertical = false;
+    }
+        
+    this->vertical = firstVertical;
+    this->move(firstPos.x(), firstPos.y());
+    this->resize(firstSize.width(), firstSize.height());
+    
+    this->setMouseTracking(true);
+    this->setFocusPolicy((Qt::FocusPolicy)(Qt::ClickFocus | Qt::WheelFocus | Qt::TabFocus | Qt::StrongFocus));
 }
