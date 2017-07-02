@@ -71,3 +71,19 @@ void NZRuler::closeEvent(QCloseEvent * evt) {
 
     evt->accept();
 }
+
+void NZRuler::mousePressEvent(QMouseEvent * evt) {
+    if(evt->buttons() & Qt::LeftButton) {
+        this->mouseIsPressed = true;
+        this->mouseOffset.x = evt->x();
+        this->mouseOffset.y = evt->y();
+        this->mouseOffset.dx = this->width() - this->mouseOffset.x;
+        this->mouseOffset.dy = this->height() - this->mouseOffset.y;
+    }
+}
+
+void NZRuler::mouseReleaseEvent(QMouseEvent * event) {
+    if(this->mouseIsPressed) {
+        this->mouseIsPressed = false;
+    }
+}

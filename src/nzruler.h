@@ -3,12 +3,14 @@
 #define __NZULER_H__
 
 #include <memory>
+#include <QCloseEvent>
 #include <QColor>
 #include <QCursor>
 #include <QFont>
 #include <QFrame>
+#include <QMouseEvent>
 #include <QSettings>
-#include <QCloseEvent>
+
 
 using namespace std;
 
@@ -46,9 +48,12 @@ protected:
 
     void initValues();
 
+    void closeEvent(QCloseEvent *);
+    void mousePressEvent(QMouseEvent *);
+    void mouseReleaseEvent(QMouseEvent *);
+
 public:
-    NZRuler(QWidget *parent = Q_NULLPTR, Qt::WindowFlags f = Qt::WindowFlags());
-    void closeEvent(QCloseEvent * evt);
+    NZRuler(QWidget *, Qt::WindowFlags);
 };
 
 #endif // __NZULER_H__
