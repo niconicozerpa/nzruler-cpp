@@ -235,3 +235,21 @@ void NZRuler::mouseMoveEvent(QMouseEvent * evt) {
         this->update();
     }
 }
+
+void NZRuler::resize(int width, int height) {
+    int minWidth = 60;
+    int minHeight = 60;
+    
+    if (width < minWidth) {
+        width = minWidth;
+    }
+    if (height < minHeight) {
+        height = minHeight;
+    }
+    
+    if (width != height) {
+        this->vertical = (width < height);
+    }
+    
+    this->QWidget::resize(width, height);
+}

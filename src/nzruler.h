@@ -55,6 +55,8 @@ protected:
     void keyPressEvent(QKeyEvent *);
     void mouseMoveEvent(QMouseEvent *);
 
+    void resize(int, int);
+
 public:
     NZRuler(QWidget *, Qt::WindowFlags);
 };
