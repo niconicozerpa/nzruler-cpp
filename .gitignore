@@ -1,6 +1,8 @@
 CMakeFiles/*
 bin/*
 lib/*
+nzruler_autogen/*
+rulerclass_autogen/*
 Makefile
 CMakeCache.txt
 cmake_install.cmake
