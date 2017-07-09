@@ -1,8 +1,7 @@
 #include "nzruler.h"
 
 #include <string>
-#include <iostream>
-using namespace std;
+#include <wx/dcbuffer.h>
 
 void NZRuler::initValues() {
     this->yellow = wxColor(255, 255, 128, 255);
@@ -294,14 +293,16 @@ void NZRuler::SetSize(int width, int height) {
 }
 
 void NZRuler::paintEvent(wxPaintEvent & evt) {
-    wxPaintDC dc(this->panel.get());
-    this->render(dc);
+    wxBufferedPaintDC bdc(this->panel.get());
+    this->render(bdc);
 }
 
 void NZRuler::paintNow()
 {
     wxClientDC dc(this->panel.get());
-    this->render(dc);
+    wxBufferedDC bdc(&dc);
+    this->render(bdc);
+    bdc.UnMask();
 }
 
 void NZRuler::render(wxDC & dc) {
