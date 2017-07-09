@@ -1,16 +1,14 @@
 #include "nzruler.h"
 
-#include <iostream>
-#include <QApplication>
+class NZRulerApp : public wxApp {
+public:
+    virtual bool OnInit();
+};
 
-using namespace std;
-
-int main(int argc, char ** argv) {
-    
-    QApplication app(argc, argv);
-    
-    NZRuler mainWindow(Q_NULLPTR, Qt::FramelessWindowHint);
-
-    mainWindow.show();
-    return app.exec();
+bool NZRulerApp::OnInit() {
+    NZRuler * window = new NZRuler();
+    window->Show(true);
+    return true;
 }
+
+wxIMPLEMENT_APP(NZRulerApp);
