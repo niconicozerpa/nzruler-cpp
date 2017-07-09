@@ -58,9 +58,10 @@ protected:
     void mousePressEvent(QMouseEvent *);
     void mouseReleaseEvent(QMouseEvent *);*/
     void keyDownEvent(wxKeyEvent &);
-    /*void mouseMoveEvent(QMouseEvent *);
+    /*void mouseMoveEvent(QMouseEvent *);*/
     
-    void resize(int, int);*/
+    void SetSize(int, int);
+    void SetSize(wxSize);
 
 public:
     NZRuler();

@@ -116,7 +116,7 @@ void NZRuler::keyDownEvent(wxKeyEvent & evt) {
         }
 
         if(modifiers & wxMOD_ALT) {
-            /*QSize size = this->size();
+            wxSize size = this->GetSize();
 
             int new_width = 0;
             int new_height = 0;
@@ -124,24 +124,24 @@ void NZRuler::keyDownEvent(wxKeyEvent & evt) {
             bool resize = true;
 
             switch (key) {
-                case Qt::Key_Left:
-                    new_width = size.width() - increment;
-                    new_height = size.height();
+                case WXK_LEFT:
+                    new_width = size.GetWidth() - increment;
+                    new_height = size.GetHeight();
                     break;
 
-                case Qt::Key_Up:
-                    new_width = size.width();
-                    new_height = size.height() - increment;
+                case WXK_UP:
+                    new_width = size.GetWidth();
+                    new_height = size.GetHeight() - increment;
                     break;
 
-                case Qt::Key_Right:
-                    new_width = size.width() + increment;
-                    new_height = size.height();
+                case WXK_RIGHT:
+                    new_width = size.GetWidth() + increment;
+                    new_height = size.GetHeight();
                     break;
 
-                case Qt::Key_Down:
-                    new_width = size.width();
-                    new_height = size.height() + increment;
+                case WXK_DOWN:
+                    new_width = size.GetWidth();
+                    new_height = size.GetHeight() + increment;
                     break;
 
                 default:
@@ -149,8 +149,8 @@ void NZRuler::keyDownEvent(wxKeyEvent & evt) {
             }
 
             if (resize) {
-                this->resize(new_width, new_height);
-            }*/
+                this->SetSize(new_width, new_height);
+            }
 
         } else {
             
@@ -246,9 +246,12 @@ void NZRuler::mouseMoveEvent(QMouseEvent * evt) {
         
         this->update();
     }
-}
+}*/
 
-void NZRuler::resize(int width, int height) {
+void NZRuler::SetSize(wxSize size) {
+    this->SetSize(size.GetWidth(), size.GetHeight());
+}
+void NZRuler::SetSize(int width, int height) {
     int minWidth = 60;
     int minHeight = 60;
     
@@ -263,8 +266,8 @@ void NZRuler::resize(int width, int height) {
         this->vertical = (width < height);
     }
     
-    this->QWidget::resize(width, height);
-}*/
+    this->wxFrame::SetSize(width, height);
+}
 
 void NZRuler::paintEvent(wxPaintEvent & evt) {
     wxPaintDC dc(this->panel.get());
