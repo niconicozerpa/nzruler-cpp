@@ -85,6 +85,9 @@ NZRuler::NZRuler():
     this->panel->Bind(wxEVT_LEFT_DOWN, &NZRuler::leftDownEvent, this);
     this->panel->Bind(wxEVT_LEFT_UP, &NZRuler::leftUpEvent, this);
     this->Bind(wxEVT_CLOSE_WINDOW, &NZRuler::closeWindowEvent, this);
+
+    this->panel->Bind(wxEVT_LEAVE_WINDOW, &NZRuler::motionEvent, this);
+    this->panel->Bind(wxEVT_ENTER_WINDOW, &NZRuler::enterWindow, this);
 }
 
 void NZRuler::closeWindowEvent(wxCloseEvent & evt) {
@@ -269,6 +272,10 @@ void NZRuler::motionEvent(wxMouseEvent & evt) {
         
         this->paintNow();
     }
+}
+
+void NZRuler::enterWindow(wxMouseEvent &evt) {
+    this->mouseIsPressed = evt.LeftIsDown();
 }
 
 void NZRuler::SetSize(wxSize size) {

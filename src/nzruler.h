@@ -58,6 +58,7 @@ protected:
     void leftUpEvent(wxMouseEvent &);
     void keyDownEvent(wxKeyEvent &);
     void motionEvent(wxMouseEvent &);
+    void enterWindow(wxMouseEvent &);
     
     void SetSize(int, int);
     void SetSize(wxSize);
