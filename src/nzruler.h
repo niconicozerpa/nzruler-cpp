@@ -38,7 +38,7 @@ protected:
 
     bool mouseIsPressed;
     int resizeArea;
-    wxCursor * oldCursor;
+    wxStockCursor oldCursor;
     Mouse mouse;
 
     wxFont font;

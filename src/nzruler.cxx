@@ -17,7 +17,7 @@ void NZRuler::initValues() {
 
     this->mouseIsPressed = false;
     this->resizeArea = 12;
-    this->oldCursor = (wxCursor * )wxSTANDARD_CURSOR;
+    this->oldCursor = wxCURSOR_ARROW;
     this->mouse.x = 0;
     this->mouse.y = 0;
 
@@ -228,27 +228,27 @@ void NZRuler::mouseMoveEvent(wxMouseEvent & evt) {
         }*/
 
     } else {
-        /*Qt::CursorShape newCursor;
+        wxStockCursor newCursor;
 
         if (lx > (w - this->resizeArea) && ly > (h - this->resizeArea)) {
-            newCursor = Qt::SizeFDiagCursor;
+            newCursor = wxCURSOR_SIZING;
 
         } else if (lx > (w - this->resizeArea)) {
-            newCursor = Qt::SizeHorCursor;
+            newCursor = wxCURSOR_SIZEWE;
         }
 
         else if (ly > (h - this->resizeArea)) {
-            newCursor = Qt::SizeVerCursor;
+            newCursor = wxCURSOR_SIZENS;
         }
 
         else {
-            newCursor = Qt::ArrowCursor;
+            newCursor = wxCURSOR_ARROW;
         }
         
         if (newCursor != this->oldCursor) {
-            this->setCursor(newCursor);
+            this->SetCursor(newCursor);
             this->oldCursor = newCursor;
-        }*/
+        }
         
         this->paintNow();
     }
