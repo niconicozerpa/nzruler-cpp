@@ -58,7 +58,7 @@ protected:
     void mousePressEvent(QMouseEvent *);
     void mouseReleaseEvent(QMouseEvent *);*/
     void keyDownEvent(wxKeyEvent &);
-    /*void mouseMoveEvent(QMouseEvent *);*/
+    void mouseMoveEvent(wxMouseEvent &);
     
     void SetSize(int, int);
     void SetSize(wxSize);

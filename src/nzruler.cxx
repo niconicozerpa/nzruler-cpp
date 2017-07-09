@@ -69,6 +69,7 @@ NZRuler::NZRuler():
     
     this->panel->Bind(wxEVT_PAINT, &NZRuler::paintEvent, this);
     this->panel->Bind(wxEVT_KEY_DOWN, &NZRuler::keyDownEvent, this);
+    this->panel->Bind(wxEVT_MOTION, &NZRuler::mouseMoveEvent, this);
     
     /*this->setMouseTracking(true);
     this->setFocusPolicy((Qt::FocusPolicy)(Qt::ClickFocus | Qt::WheelFocus | Qt::TabFocus | Qt::StrongFocus));*/
@@ -192,20 +193,25 @@ void NZRuler::keyDownEvent(wxKeyEvent & evt) {
     }
 }
 
-/*
-void NZRuler::mouseMoveEvent(QMouseEvent * evt) {
-    int x = evt->globalX();
-    int y = evt->globalY();
-    int lx = evt->x();
-    int ly = evt->y();
-    int w = this->width();
-    int h = this->height();
+void NZRuler::mouseMoveEvent(wxMouseEvent & evt) {
+
+    wxPoint screen_pos = wxGetMousePosition();
+    wxPoint frame_pos = this->ScreenToClient(screen_pos);
+    wxSize frame_size = this->GetSize();
+
+    int x = screen_pos.x;
+    int y = screen_pos.y;
+    int lx = frame_pos.x;
+    int ly = frame_pos.y;
+    
+    int w = frame_size.GetWidth();
+    int h = frame_size.GetHeight();
     
     this->mouse.x = lx;
     this->mouse.y = ly;
     
     if (this->mouseIsPressed) {
-        if (this->oldCursor == Qt::SizeHorCursor) {
+        /*if (this->oldCursor == Qt::SizeHorCursor) {
             this->resize(lx + this->mouseOffset.dx, h);
         }
 
@@ -219,10 +225,10 @@ void NZRuler::mouseMoveEvent(QMouseEvent * evt) {
         
         else {
             this->move(x - this->mouseOffset.x, y - this->mouseOffset.y);
-        }
+        }*/
 
     } else {
-        Qt::CursorShape newCursor;
+        /*Qt::CursorShape newCursor;
 
         if (lx > (w - this->resizeArea) && ly > (h - this->resizeArea)) {
             newCursor = Qt::SizeFDiagCursor;
@@ -242,11 +248,11 @@ void NZRuler::mouseMoveEvent(QMouseEvent * evt) {
         if (newCursor != this->oldCursor) {
             this->setCursor(newCursor);
             this->oldCursor = newCursor;
-        }
+        }*/
         
-        this->update();
+        this->paintNow();
     }
-}*/
+}
 
 void NZRuler::SetSize(wxSize size) {
     this->SetSize(size.GetWidth(), size.GetHeight());
@@ -372,16 +378,20 @@ void NZRuler::render(wxDC & dc) {
         }
     }
 
-    /*if (!this->mouseIsPressed) {
-        pnt.setPen(this->blue);
+    if (!this->mouseIsPressed) {
+        dc.SetPen(wxPen(this->blue));
+        dc.SetTextForeground(this->blue);
         
         if (this->vertical) {
-            pnt.drawLine(0, this->mouse.y, width, this->mouse.y);
+            dc.DrawLine(0, this->mouse.y, width, this->mouse.y);
         } else {
-            pnt.drawLine(this->mouse.x, 0, this->mouse.x, height);
+            dc.DrawLine(this->mouse.x, 0, this->mouse.x, height);
         }
 
-        QStaticText label(QString("%1").arg(this->vertical ? this->mouse.y : this->mouse.x));
+        string label = to_string(this->vertical ? this->mouse.y : this->mouse.x);
+
+        wxCoord w, h;
+        dc.GetTextExtent(label, &w, &h);
         
         int posX, posY;
         bool drawLabel;
@@ -390,17 +400,16 @@ void NZRuler::render(wxDC & dc) {
             posX = this->safePos;
             posY = this->mouse.y + 5;
             
-            drawLabel = (posY + label.size().height()) > limit;
+            drawLabel = (posY + h) > limit;
         } else {
             posX = this->mouse.x + 5;
             posY = this->safePos;
         
-            if (posX + label.size().width() > (width - 5)) {
-                posX = this->mouse.x - 5 - label.size().width();
+            if (posX + w > (width - 5)) {
+                posX = this->mouse.x - 5 - w;
             }
         }
         
-        pnt.drawStaticText(posX, posY, label);
+        dc.DrawText(label, posX, posY);
     }
-    pnt.end();*/
 }
