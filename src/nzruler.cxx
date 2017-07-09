@@ -80,7 +80,7 @@ NZRuler::NZRuler():
     this->SetSize(firstSize);
 
     this->panel->Bind(wxEVT_PAINT, &NZRuler::paintEvent, this);
-    this->panel->Bind(wxEVT_KEY_DOWN, &NZRuler::keyDownEvent, this);
+    this->panel->Bind(wxEVT_CHAR_HOOK, &NZRuler::keyDownEvent, this);
     this->panel->Bind(wxEVT_MOTION, &NZRuler::motionEvent, this);
     this->panel->Bind(wxEVT_LEFT_DOWN, &NZRuler::leftDownEvent, this);
     this->panel->Bind(wxEVT_LEFT_UP, &NZRuler::leftUpEvent, this);
@@ -290,6 +290,10 @@ void NZRuler::SetSize(int width, int height) {
     }
     
     this->wxFrame::SetSize(width, height);
+
+    if (this->IsShownOnScreen()) {
+        this->paintNow();
+    }
 }
 
 void NZRuler::paintEvent(wxPaintEvent & evt) {
