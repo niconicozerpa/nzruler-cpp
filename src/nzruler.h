@@ -3,15 +3,13 @@
 #define __NZULER_H__
 
 #include <memory>
-#include <QCloseEvent>
-#include <QColor>
-#include <QCursor>
-#include <QFont>
-#include <QKeyEvent>
-#include <QMainWindow>
-#include <QMouseEvent>
-#include <QPaintEvent>
-#include <QSettings>
+
+#include <wx/wxprec.h>
+#ifndef WX_PRECOMP
+    #include <wx/wx.h>
+#endif
+
+#include <wx/fileconf.h>
 
 using namespace std;
 
@@ -27,39 +25,47 @@ typedef struct Mouse {
     int y;
 } Mouse;
 
-class NZRuler: public QMainWindow {
+class NZRuler: public wxFrame {
 protected:
-    QColor yellow;
-    QColor black;
-    QColor blue;
-    QColor red;
+    wxColour yellow;
+    wxColour black;
+    wxColour blue;
+    wxColour red;
 
     MouseOffset mouseOffset;
 
     bool mouseIsPressed;
     int resizeArea;
-    Qt::CursorShape oldCursor;
+    wxCursor * oldCursor;
     Mouse mouse;
 
-    QFont font;
+    wxFont font;
     int safePos;
     int vertical;
 
-    shared_ptr<QSettings> settings;
+    shared_ptr<wxFileConfig> settings;
 
     void initValues();
 
-    void closeEvent(QCloseEvent *);
+    void paintEvent(wxPaintEvent &);
+    void paintNow();
+ 
+    void render(wxDC &);
+
+    /*void closeEvent(QCloseEvent *);
     void mousePressEvent(QMouseEvent *);
     void mouseReleaseEvent(QMouseEvent *);
     void keyPressEvent(QKeyEvent *);
     void mouseMoveEvent(QMouseEvent *);
     void paintEvent(QPaintEvent *);
 
-    void resize(int, int);
+    void resize(int, int);*/
+
+    DECLARE_EVENT_TABLE()
 
 public:
-    NZRuler(QWidget *, Qt::WindowFlags);
+    NZRuler();
 };
+
 
 #endif // __NZULER_H__

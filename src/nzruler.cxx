@@ -1,16 +1,17 @@
 #include "nzruler.h"
 
-#include <QPainter>
-#include <QPoint>
-#include <QSize>
-#include <QStaticText>
-#include <QString>
+#include <string>
+using namespace std;
+
+BEGIN_EVENT_TABLE(NZRuler, wxFrame)
+EVT_PAINT(NZRuler::paintEvent)
+END_EVENT_TABLE()
 
 void NZRuler::initValues() {
-    this->yellow = QColor(255, 255, 128, 255);
-    this->black = QColor(0, 0, 0, 255);
-    this->blue = QColor(0, 0, 170, 255);
-    this->red = QColor(255, 0, 0, 255);
+    this->yellow = wxColor(255, 255, 128, 255);
+    this->black = wxColor(0, 0, 0, 255);
+    this->blue = wxColor(0, 0, 170, 255);
+    this->red = wxColor(255, 0, 0, 255);
 
     this->mouseOffset.x = 0;
     this->mouseOffset.y = 0;
@@ -19,52 +20,58 @@ void NZRuler::initValues() {
 
     this->mouseIsPressed = false;
     this->resizeArea = 12;
-    this->oldCursor = Qt::ArrowCursor;
+    this->oldCursor = (wxCursor * )wxSTANDARD_CURSOR;
     this->mouse.x = 0;
     this->mouse.y = 0;
 
-    this->font = QFont("FreeSans, Helvetica, Arial, sans-serif", 9, QFont::Bold, false);
+    this->font = wxFont(wxFontInfo(9).FaceName("FreeSans, Helvetica, Arial, sans-serif").Bold());
     this->safePos = 33;
     this->vertical = false;
 
-    this->settings = make_shared<QSettings>("nzruler", "nzruler");
+    // this->settings = make_shared<QSettings>("nzruler", "nzruler");
 }
 
-NZRuler::NZRuler(QWidget * parent, Qt::WindowFlags f):
-    QMainWindow(parent, f) {
+NZRuler::NZRuler():
+    wxFrame(
+        NULL,
+        wxID_ANY,
+        "NZRuler",
+        wxDefaultPosition,
+        wxDefaultSize,
+        wxNO_BORDER
+    ) {
     this->initValues();
 
-    QPoint firstPos;
-    QSize firstSize;
+    wxPoint firstPos;
+    wxSize firstSize;
     bool firstVertical;
 
-
-    if(this->settings->contains("position")) {
+    /*if(this->settings->contains("position")) {
         firstPos = this->settings->value("position").toPoint();
-    } else {
-        firstPos = QPoint(100, 100);
-    }
+    } else {*/
+        firstPos = wxPoint(100, 100);
+    /*}*/
         
-    if(this->settings->contains("size")) {
+    /*if(this->settings->contains("size")) {
         firstSize = this->settings->value("size").toSize();
-    } else {
-        firstSize = QSize(200, 60);
-    }
+    } else {*/
+        firstSize = wxSize(200, 60);
+    /*}*/
     
-    if(this->settings->contains("vertical")) {
+    /*if(this->settings->contains("vertical")) {
         firstVertical = this->settings->value("vertical").toBool();
-    } else {
+    } else {*/
         firstVertical = false;
-    }
+    /*}*/
         
     this->vertical = firstVertical;
-    this->move(firstPos.x(), firstPos.y());
-    this->resize(firstSize.width(), firstSize.height());
+    this->SetPosition(firstPos);
+    this->SetSize(firstSize);
     
-    this->setMouseTracking(true);
-    this->setFocusPolicy((Qt::FocusPolicy)(Qt::ClickFocus | Qt::WheelFocus | Qt::TabFocus | Qt::StrongFocus));
+    /*this->setMouseTracking(true);
+    this->setFocusPolicy((Qt::FocusPolicy)(Qt::ClickFocus | Qt::WheelFocus | Qt::TabFocus | Qt::StrongFocus));*/
 }
-
+/*
 
 
 void NZRuler::closeEvent(QCloseEvent * evt) {
@@ -255,42 +262,53 @@ void NZRuler::resize(int width, int height) {
     }
     
     this->QWidget::resize(width, height);
+}*/
+
+void NZRuler::paintEvent(wxPaintEvent & evt) {
+    wxPaintDC dc(this);
+    this->render(dc);
 }
 
-void NZRuler::paintEvent(QPaintEvent * evt) {
-    QPainter pnt;
-
-    pnt.begin(this);
-    pnt.setFont(this->font);
-
-    int width = this->width();
-    int height = this->height();
+void NZRuler::render(wxDC & dc) {
     
-    pnt.drawRect(0, 0, width - 1, height - 1);
-    pnt.fillRect(1, 1, width - 2, height - 2, this->yellow);
+    dc.SetFont(this->font);
+
+    wxSize size_obj = this->GetSize();
+    int width = size_obj.GetWidth();
+    int height = size_obj.GetHeight();
     
+    dc.SetBrush(wxBrush(this->yellow));
+    dc.SetPen(* wxBLACK_PEN);
+    dc.DrawRectangle(0, 0, width, height);
+
     this->safePos = this->vertical ? 0 : 33;
         
     int size = this->vertical ? height : width;
     
-    pnt.setPen(this->red);
+    dc.SetTextForeground(* wxRED);
     int limit;
     
     if (this->vertical) {
-        QString str = QString("%1").arg(height);
-        QStaticText labelLength(str);
-        limit = (height - 3 - labelLength.size().height());
+        string str = to_string(height);
+        
+        wxCoord w, h;
+        dc.GetTextExtent(str, &w, &h);
 
-        pnt.drawStaticText(17.5, limit, labelLength);
+        limit = height - 3 - h;
+
+        dc.DrawText(str, 17.5, limit);
     } else {
-        QString str = QString("%1").arg(width);
-        QStaticText labelLength(str);
-        limit = (width - 3 - labelLength.size().width());
+        string str = to_string(width);
 
-        pnt.drawStaticText(limit, 17.5, labelLength);
+        wxCoord w, h;
+        dc.GetTextExtent(str, &w, &h);
+
+        limit = (width - 3 - w);
+
+        dc.DrawText(str, limit, 17.5);
     }
     
-    pnt.setPen(this->black);
+    dc.SetTextForeground(* wxBLACK);
     
     for (int i = 0; i < size; i += 2) {
         int length;
@@ -305,13 +323,16 @@ void NZRuler::paintEvent(QPaintEvent * evt) {
         }
         
         if (this->vertical) {
-            pnt.drawLine(0, i, length, i);
+            dc.DrawLine(0, i, length, i);
         } else {
-            pnt.drawLine(i, 0, i, length);
+            dc.DrawLine(i, 0, i, length);
         }
         
         if (length == 15) {
-            QStaticText label = QStaticText(QString("%1").arg(i));
+            string label = to_string(i);
+
+            wxCoord w, h;
+            dc.GetTextExtent(label, &w, &h);
 
             float labelX;
             float labelY;
@@ -320,27 +341,27 @@ void NZRuler::paintEvent(QPaintEvent * evt) {
             
             if (this->vertical) {
                 labelX = 17.5;
-                labelY = i - (label.size().height() / 2);
+                labelY = i - (h / 2);
                 
-                if (this->safePos < (labelX + label.size().width())) {
-                    this->safePos = labelX + label.size().width() + 5;
+                if (this->safePos < w) {
+                    this->safePos = w + 5;
                 }
                     
-                drawLabel = (labelY + label.size().height()) < limit;
+                drawLabel = (labelY + h) < limit;
             } else {
-                labelX = i - (label.size().width() / 2);
+                labelX = i - (w / 2);
                 labelY = 17.5;
                 
-                drawLabel = (labelX + label.size().width()) < limit;
+                drawLabel = (labelX + w) < limit;
             }
 
             if(drawLabel) {
-                pnt.drawStaticText(labelX, labelY, label);
+                dc.DrawText(label, labelX, labelY);
             }
         }
     }
 
-    if (!this->mouseIsPressed) {
+    /*if (!this->mouseIsPressed) {
         pnt.setPen(this->blue);
         
         if (this->vertical) {
@@ -370,5 +391,5 @@ void NZRuler::paintEvent(QPaintEvent * evt) {
         
         pnt.drawStaticText(posX, posY, label);
     }
-    pnt.end();
+    pnt.end();*/
 }
