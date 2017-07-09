@@ -101,26 +101,22 @@ void NZRuler::mouseReleaseEvent(QMouseEvent * event) {
 }*/
 
 void NZRuler::keyDownEvent(wxKeyEvent & evt) {
-    cout << "Hola mundo!" << endl;
-    evt.Skip();
-    //auto key = evt.GetKeyCode();
+    auto key = evt.GetKeyCode();
 
-    
-    
-    /*if(key == WXK_ESCAPE) {
+    if(key == WXK_ESCAPE) {
         this->Close();
-    }/* else {
+    } else {
         unsigned short int increment;
-        auto modifiers = evt->modifiers();
+        auto modifiers = evt.GetModifiers();
 
-        if (modifiers & Qt::ShiftModifier) {
+        if (modifiers & wxMOD_SHIFT) {
             increment = 3;
         } else {
             increment = 1;
         }
 
-        if(modifiers & Qt::AltModifier) {
-            QSize size = this->size();
+        if(modifiers & wxMOD_ALT) {
+            /*QSize size = this->size();
 
             int new_width = 0;
             int new_height = 0;
@@ -154,35 +150,35 @@ void NZRuler::keyDownEvent(wxKeyEvent & evt) {
 
             if (resize) {
                 this->resize(new_width, new_height);
-            }
+            }*/
 
         } else {
             
-            QPoint pos = this->pos();
+            wxPoint pos = this->GetPosition();
             int new_x = 0;
             int new_y = 0;
 
             bool move = true;
 
             switch (key) {
-                case Qt::Key_Left:
-                    new_x = pos.x() - increment;
-                    new_y = pos.y();
+                case WXK_LEFT:
+                    new_x = pos.x - increment;
+                    new_y = pos.y;
                     break;
 
-                case Qt::Key_Up:
-                    new_x = pos.x();
-                    new_y = pos.y() - increment;
+                case WXK_UP:
+                    new_x = pos.x;
+                    new_y = pos.y - increment;
                     break;
 
-                case Qt::Key_Right:
-                    new_x = pos.x() + increment;
-                    new_y = pos.y();
+                case WXK_RIGHT:
+                    new_x = pos.x + increment;
+                    new_y = pos.y;
                     break;
 
-                case Qt::Key_Down:
-                    new_x = pos.x();
-                    new_y = pos.y() + increment;
+                case WXK_DOWN:
+                    new_x = pos.x;
+                    new_y = pos.y + increment;
                     break;
 
                 default:
@@ -190,10 +186,10 @@ void NZRuler::keyDownEvent(wxKeyEvent & evt) {
             }
             
             if (move) {
-                this->move(new_x, new_y);
+                this->Move(new_x, new_y);
             }
         }
-    }*/
+    }
 }
 
 /*
