@@ -32,6 +32,8 @@ protected:
     wxColour blue;
     wxColour red;
 
+    unique_ptr<wxPanel> panel;
+
     MouseOffset mouseOffset;
 
     bool mouseIsPressed;
@@ -43,7 +45,7 @@ protected:
     int safePos;
     int vertical;
 
-    shared_ptr<wxFileConfig> settings;
+    unique_ptr<wxFileConfig> settings;
 
     void initValues();
 
@@ -54,14 +56,11 @@ protected:
 
     /*void closeEvent(QCloseEvent *);
     void mousePressEvent(QMouseEvent *);
-    void mouseReleaseEvent(QMouseEvent *);
-    void keyPressEvent(QKeyEvent *);
-    void mouseMoveEvent(QMouseEvent *);
-    void paintEvent(QPaintEvent *);
-
+    void mouseReleaseEvent(QMouseEvent *);*/
+    void keyDownEvent(wxKeyEvent &);
+    /*void mouseMoveEvent(QMouseEvent *);
+    
     void resize(int, int);*/
-
-    DECLARE_EVENT_TABLE()
 
 public:
     NZRuler();

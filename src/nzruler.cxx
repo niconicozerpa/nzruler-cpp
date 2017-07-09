@@ -1,11 +1,8 @@
 #include "nzruler.h"
 
 #include <string>
+#include <iostream>
 using namespace std;
-
-BEGIN_EVENT_TABLE(NZRuler, wxFrame)
-EVT_PAINT(NZRuler::paintEvent)
-END_EVENT_TABLE()
 
 void NZRuler::initValues() {
     this->yellow = wxColor(255, 255, 128, 255);
@@ -38,7 +35,7 @@ NZRuler::NZRuler():
         "NZRuler",
         wxDefaultPosition,
         wxDefaultSize,
-        wxNO_BORDER
+        wxNO_BORDER | wxWANTS_CHARS
     ) {
     this->initValues();
 
@@ -67,6 +64,11 @@ NZRuler::NZRuler():
     this->vertical = firstVertical;
     this->SetPosition(firstPos);
     this->SetSize(firstSize);
+
+    this->panel = unique_ptr<wxPanel>(new wxPanel(this, wxID_ANY, firstPos, firstSize));
+    
+    this->panel->Bind(wxEVT_PAINT, &NZRuler::paintEvent, this);
+    this->panel->Bind(wxEVT_KEY_DOWN, &NZRuler::keyDownEvent, this);
     
     /*this->setMouseTracking(true);
     this->setFocusPolicy((Qt::FocusPolicy)(Qt::ClickFocus | Qt::WheelFocus | Qt::TabFocus | Qt::StrongFocus));*/
@@ -96,14 +98,18 @@ void NZRuler::mouseReleaseEvent(QMouseEvent * event) {
     if(this->mouseIsPressed) {
         this->mouseIsPressed = false;
     }
-}
+}*/
 
-void NZRuler::keyPressEvent(QKeyEvent * evt) {
-    auto key = evt->key();
+void NZRuler::keyDownEvent(wxKeyEvent & evt) {
+    cout << "Hola mundo!" << endl;
+    evt.Skip();
+    //auto key = evt.GetKeyCode();
+
     
-    if(key == Qt::Key_Escape) {
-        this->close();
-    } else {
+    
+    /*if(key == WXK_ESCAPE) {
+        this->Close();
+    }/* else {
         unsigned short int increment;
         auto modifiers = evt->modifiers();
 
@@ -187,10 +193,10 @@ void NZRuler::keyPressEvent(QKeyEvent * evt) {
                 this->move(new_x, new_y);
             }
         }
-    }
+    }*/
 }
 
-
+/*
 void NZRuler::mouseMoveEvent(QMouseEvent * evt) {
     int x = evt->globalX();
     int y = evt->globalY();
@@ -265,13 +271,13 @@ void NZRuler::resize(int width, int height) {
 }*/
 
 void NZRuler::paintEvent(wxPaintEvent & evt) {
-    wxPaintDC dc(this);
+    wxPaintDC dc(this->panel.get());
     this->render(dc);
 }
 
 void NZRuler::paintNow()
 {
-    wxClientDC dc(this);
+    wxClientDC dc(this->panel.get());
     this->render(dc);
 }
 
