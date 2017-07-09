@@ -10,6 +10,7 @@
 #endif
 
 #include <wx/fileconf.h>
+#include <wx/event.h>
 
 using namespace std;
 
@@ -28,9 +29,7 @@ typedef struct Mouse {
 class NZRuler: public wxFrame {
 protected:
     wxColour yellow;
-    wxColour black;
     wxColour blue;
-    wxColour red;
 
     unique_ptr<wxPanel> panel;
 
@@ -54,11 +53,11 @@ protected:
  
     void render(wxDC &);
 
-    /*void closeEvent(QCloseEvent *);*/
-    void mousePressEvent(wxMouseEvent &);
-    void mouseReleaseEvent(wxMouseEvent &);
+    void closeWindowEvent(wxCloseEvent &);
+    void leftDownEvent(wxMouseEvent &);
+    void leftUpEvent(wxMouseEvent &);
     void keyDownEvent(wxKeyEvent &);
-    void mouseMoveEvent(wxMouseEvent &);
+    void motionEvent(wxMouseEvent &);
     
     void SetSize(int, int);
     void SetSize(wxSize);

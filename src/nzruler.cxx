@@ -6,9 +6,7 @@ using namespace std;
 
 void NZRuler::initValues() {
     this->yellow = wxColor(255, 255, 128, 255);
-    this->black = wxColor(0, 0, 0, 255);
     this->blue = wxColor(0, 0, 170, 255);
-    this->red = wxColor(255, 0, 0, 255);
 
     this->mouseOffset.x = 0;
     this->mouseOffset.y = 0;
@@ -25,7 +23,14 @@ void NZRuler::initValues() {
     this->safePos = 33;
     this->vertical = false;
 
-    // this->settings = make_shared<QSettings>("nzruler", "nzruler");
+    this->panel = unique_ptr<wxPanel>(new wxPanel(this, wxID_ANY));
+    this->settings = unique_ptr<wxFileConfig>(new wxFileConfig(
+        "nzruler",
+        "nzruler",
+        wxEmptyString,
+        wxEmptyString,
+        wxCONFIG_USE_LOCAL_FILE
+    ));
 }
 
 NZRuler::NZRuler():
@@ -43,51 +48,59 @@ NZRuler::NZRuler():
     wxSize firstSize;
     bool firstVertical;
 
-    /*if(this->settings->contains("position")) {
-        firstPos = this->settings->value("position").toPoint();
-    } else {*/
+    int position_x, position_y;
+    int size_w, size_h;
+    bool vertical;
+
+    if(
+        this->settings->Read("position_x", &position_x)
+        && this->settings->Read("position_y", &position_y)
+    ) {
+        firstPos = wxPoint(position_x, position_y);
+    } else {
         firstPos = wxPoint(100, 100);
-    /*}*/
+    }
         
-    /*if(this->settings->contains("size")) {
-        firstSize = this->settings->value("size").toSize();
-    } else {*/
+    if(
+        this->settings->Read("size_w", &size_w)
+        && this->settings->Read("size_h", &size_h)
+    ) {
+        firstSize = wxSize(size_w, size_h);
+    } else {
         firstSize = wxSize(200, 60);
-    /*}*/
+    }
     
-    /*if(this->settings->contains("vertical")) {
-        firstVertical = this->settings->value("vertical").toBool();
-    } else {*/
+    if(this->settings->Read("vertical", &vertical)) {
+        firstVertical = vertical;
+    } else {
         firstVertical = false;
-    /*}*/
+    }
         
     this->vertical = firstVertical;
     this->SetPosition(firstPos);
     this->SetSize(firstSize);
 
-    this->panel = unique_ptr<wxPanel>(new wxPanel(this, wxID_ANY, firstPos, firstSize));
-    
     this->panel->Bind(wxEVT_PAINT, &NZRuler::paintEvent, this);
     this->panel->Bind(wxEVT_KEY_DOWN, &NZRuler::keyDownEvent, this);
-    this->panel->Bind(wxEVT_MOTION, &NZRuler::mouseMoveEvent, this);
-    this->panel->Bind(wxEVT_LEFT_DOWN, &NZRuler::mousePressEvent, this);
-    this->panel->Bind(wxEVT_LEFT_UP, &NZRuler::mouseReleaseEvent, this);
-    
-    /*this->setMouseTracking(true);
-    this->setFocusPolicy((Qt::FocusPolicy)(Qt::ClickFocus | Qt::WheelFocus | Qt::TabFocus | Qt::StrongFocus));*/
+    this->panel->Bind(wxEVT_MOTION, &NZRuler::motionEvent, this);
+    this->panel->Bind(wxEVT_LEFT_DOWN, &NZRuler::leftDownEvent, this);
+    this->panel->Bind(wxEVT_LEFT_UP, &NZRuler::leftUpEvent, this);
+    this->Bind(wxEVT_CLOSE_WINDOW, &NZRuler::closeWindowEvent, this);
 }
-/*
 
+void NZRuler::closeWindowEvent(wxCloseEvent & evt) {
+    auto size = this->GetSize();
+    auto position = this->GetPosition();
+    this->settings->Write("position_x", position.x);
+    this->settings->Write("position_y", position.y);
+    this->settings->Write("size_w", size.GetWidth());
+    this->settings->Write("size_h", size.GetHeight());
+    this->settings->Write("vertical", this->vertical);
 
-void NZRuler::closeEvent(QCloseEvent * evt) {
-    this->settings->setValue("position", QVariant(this->pos()));
-    this->settings->setValue("size", QVariant(this->size()));
-    this->settings->setValue("vertical", QVariant(this->vertical));
+    evt.Skip();
+}
 
-    evt->accept();
-}*/
-
-void NZRuler::mousePressEvent(wxMouseEvent & evt) {
+void NZRuler::leftDownEvent(wxMouseEvent & evt) {
     wxSize size = this->GetSize();
 
     wxPoint screen_pos = wxGetMousePosition();
@@ -100,7 +113,7 @@ void NZRuler::mousePressEvent(wxMouseEvent & evt) {
     this->mouseOffset.dy = size.GetHeight() - this->mouseOffset.y;
 }
 
-void NZRuler::mouseReleaseEvent(wxMouseEvent & event) {
+void NZRuler::leftUpEvent(wxMouseEvent & event) {
     if(this->mouseIsPressed) {
         this->mouseIsPressed = false;
     }
@@ -198,7 +211,7 @@ void NZRuler::keyDownEvent(wxKeyEvent & evt) {
     }
 }
 
-void NZRuler::mouseMoveEvent(wxMouseEvent & evt) {
+void NZRuler::motionEvent(wxMouseEvent & evt) {
 
     wxPoint screen_pos = wxGetMousePosition();
     wxPoint frame_pos = this->ScreenToClient(screen_pos);
