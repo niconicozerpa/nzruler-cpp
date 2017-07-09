@@ -11,6 +11,10 @@ set(CMAKE_INCLUDE_CURRENT_DIR ON)
 find_package(wxWidgets COMPONENTS core base REQUIRED)
 include( "${wxWidgets_USE_FILE}" )
 
+if (MINGW)
+    set(CMAKE_SHARED_LINKER_FLAGS "-mwindows")
+endif ()
+
 add_executable(nzruler main.cxx nzruler.cxx)
 
 target_link_libraries(nzruler ${wxWidgets_LIBRARIES})
