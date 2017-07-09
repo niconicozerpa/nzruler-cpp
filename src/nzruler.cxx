@@ -269,6 +269,12 @@ void NZRuler::paintEvent(wxPaintEvent & evt) {
     this->render(dc);
 }
 
+void NZRuler::paintNow()
+{
+    wxClientDC dc(this);
+    this->render(dc);
+}
+
 void NZRuler::render(wxDC & dc) {
     
     dc.SetFont(this->font);
