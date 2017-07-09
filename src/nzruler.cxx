@@ -70,6 +70,8 @@ NZRuler::NZRuler():
     this->panel->Bind(wxEVT_PAINT, &NZRuler::paintEvent, this);
     this->panel->Bind(wxEVT_KEY_DOWN, &NZRuler::keyDownEvent, this);
     this->panel->Bind(wxEVT_MOTION, &NZRuler::mouseMoveEvent, this);
+    this->panel->Bind(wxEVT_LEFT_DOWN, &NZRuler::mousePressEvent, this);
+    this->panel->Bind(wxEVT_LEFT_UP, &NZRuler::mouseReleaseEvent, this);
     
     /*this->setMouseTracking(true);
     this->setFocusPolicy((Qt::FocusPolicy)(Qt::ClickFocus | Qt::WheelFocus | Qt::TabFocus | Qt::StrongFocus));*/
@@ -83,23 +85,26 @@ void NZRuler::closeEvent(QCloseEvent * evt) {
     this->settings->setValue("vertical", QVariant(this->vertical));
 
     evt->accept();
+}*/
+
+void NZRuler::mousePressEvent(wxMouseEvent & evt) {
+    wxSize size = this->GetSize();
+
+    wxPoint screen_pos = wxGetMousePosition();
+    wxPoint frame_pos = this->ScreenToClient(screen_pos);
+
+    this->mouseIsPressed = true;
+    this->mouseOffset.x = frame_pos.x;
+    this->mouseOffset.y = frame_pos.y;
+    this->mouseOffset.dx = size.GetWidth() - this->mouseOffset.x;
+    this->mouseOffset.dy = size.GetHeight() - this->mouseOffset.y;
 }
 
-void NZRuler::mousePressEvent(QMouseEvent * evt) {
-    if(evt->buttons() & Qt::LeftButton) {
-        this->mouseIsPressed = true;
-        this->mouseOffset.x = evt->x();
-        this->mouseOffset.y = evt->y();
-        this->mouseOffset.dx = this->width() - this->mouseOffset.x;
-        this->mouseOffset.dy = this->height() - this->mouseOffset.y;
-    }
-}
-
-void NZRuler::mouseReleaseEvent(QMouseEvent * event) {
+void NZRuler::mouseReleaseEvent(wxMouseEvent & event) {
     if(this->mouseIsPressed) {
         this->mouseIsPressed = false;
     }
-}*/
+}
 
 void NZRuler::keyDownEvent(wxKeyEvent & evt) {
     auto key = evt.GetKeyCode();
@@ -211,21 +216,21 @@ void NZRuler::mouseMoveEvent(wxMouseEvent & evt) {
     this->mouse.y = ly;
     
     if (this->mouseIsPressed) {
-        /*if (this->oldCursor == Qt::SizeHorCursor) {
-            this->resize(lx + this->mouseOffset.dx, h);
+        if (this->oldCursor == wxCURSOR_SIZEWE) {
+            this->SetSize(lx + this->mouseOffset.dx, h);
         }
 
-        else if (this->oldCursor == Qt::SizeVerCursor) {
-            this->resize(w, ly + this->mouseOffset.dy);
+        else if (this->oldCursor == wxCURSOR_SIZENS) {
+            this->SetSize(w, ly + this->mouseOffset.dy);
         }
 
-        else if (this->oldCursor == Qt::SizeFDiagCursor) {
-            this->resize(lx + this->mouseOffset.dx, ly + this->mouseOffset.dy);
+        else if (this->oldCursor == wxCURSOR_SIZING) {
+            this->SetSize(lx + this->mouseOffset.dx, ly + this->mouseOffset.dy);
         }
         
         else {
-            this->move(x - this->mouseOffset.x, y - this->mouseOffset.y);
-        }*/
+            this->Move(x - this->mouseOffset.x, y - this->mouseOffset.y);
+        }
 
     } else {
         wxStockCursor newCursor;

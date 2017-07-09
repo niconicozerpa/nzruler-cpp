@@ -54,9 +54,9 @@ protected:
  
     void render(wxDC &);
 
-    /*void closeEvent(QCloseEvent *);
-    void mousePressEvent(QMouseEvent *);
-    void mouseReleaseEvent(QMouseEvent *);*/
+    /*void closeEvent(QCloseEvent *);*/
+    void mousePressEvent(wxMouseEvent &);
+    void mouseReleaseEvent(wxMouseEvent &);
     void keyDownEvent(wxKeyEvent &);
     void mouseMoveEvent(wxMouseEvent &);
     
